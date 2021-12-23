@@ -1,18 +1,15 @@
-function logInAsJnmDemo(server) {
-  cy.visit(server)
-
-  cy.get('#id_username').type('HEY_USERNAME')
-  cy.get('#id_password').type('make something up')
-  cy.get('input[type=submit]').click()
-
-  cy.get('.account-username').should('contain', 'HEY_USERNAME')
-}
+// USERNAME, PASSWORD, and URL can be set in the OS environment as
+// CYPRESS_USERNAME, CYPRESS_PASSWORD, and URL
 
 describe('Log in to production servers', () => {
-  it('Logs into HHI', () => {
-    logInAsJnmDemo('https://kf.kobotoolbox.org/')
-  })
-  it('Logs into OCHA', () => {
-    logInAsJnmDemo('https://kobo.humanitarianresponse.info/')
+  const server = Cypress.env('URL')
+  it('Logs into ' + server, () => {
+    cy.visit(server)
+
+    cy.get('#id_username').type(Cypress.env('USERNAME'))
+    cy.get('#id_password').type(Cypress.env('PASSWORD'))
+    cy.get('input[type=submit]').click()
+
+    cy.get('.account-username').should('contain', Cypress.env('USERNAME'))
   })
 })

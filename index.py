@@ -9,28 +9,47 @@ from ansi2html import Ansi2HTMLConverter
 
 PORT = 8013
 CYPRESS_VOLUME = os.getcwd() + '/volume'
-DOCKER_COMMAND = [
-    'docker',
-    'run',
-    # '-it',
-    '-v',
-    f'{CYPRESS_VOLUME}:/yay',
-    '-w',
-    '/yay',
-    'cypress/included:3.4.0',
-]
 
 ansi_to_html = Ansi2HTMLConverter().convert
 
+def docker_command(url, username, password):
+    return [
+        'docker', 'run',
+        # '-it',
+        '-v', f'{CYPRESS_VOLUME}:/yay',
+        '-w', '/yay',
+        '-e', f'CYPRESS_URL={url}',
+        '-e', f'CYPRESS_USERNAME={username}',
+        '-e', f'CYPRESS_PASSWORD={password}',
+        'cypress/included:3.4.0',
+    ]
+
+
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path != '/':
+        path = self.path.strip('/')
+        if path == 'hhi':
+            url = 'https://kf.kobotoolbox.org/'
+        elif path == 'ocha':
+            url = 'https://kobo.humanitarianresponse.info/'
+        elif path == '':
+            self.send_response(HTTPStatus.NOT_FOUND)
+            self.send_header('Content-Type', 'text/plain; charset=UTF-8')
+            self.end_headers()
+            self.wfile.write('Please specify a target'.encode('utf-8'))
+            return
+        else:
             self.send_error(HTTPStatus.NOT_FOUND)
             return
         try:
             print('Starting Cypress…', flush=True)
             output = subprocess.check_output(
-                DOCKER_COMMAND, stderr=subprocess.STDOUT
+                docker_command(
+                    url,
+                    os.environ['CYPRESS_USERNAME'],
+                    os.environ['CYPRESS_PASSWORD'],
+                ),
+                stderr=subprocess.STDOUT,
             )
         except subprocess.CalledProcessError as e:
             output = e.output
