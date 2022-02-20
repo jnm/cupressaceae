@@ -16,6 +16,7 @@ def docker_command(url, username, password):
     return [
         'docker', 'run',
         # '-it',
+        '-rm',
         '-v', f'{CYPRESS_VOLUME}:/yay',
         '-w', '/yay',
         '-e', f'CYPRESS_URL={url}',
