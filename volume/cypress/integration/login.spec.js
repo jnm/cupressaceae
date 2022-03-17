@@ -8,7 +8,7 @@ describe('Log in to production servers', () => {
 
     cy.get('#id_username').type(Cypress.env('USERNAME'))
     cy.get('#id_password').type(Cypress.env('PASSWORD'))
-    cy.get('input[type=submit]').click()
+    cy.get('button[type=submit]').click()
 
     cy.get('.account-username').should('contain', Cypress.env('USERNAME'))
   })
