@@ -22,7 +22,7 @@ def docker_command(url, username, password):
         '-e', f'CYPRESS_URL={url}',
         '-e', f'CYPRESS_USERNAME={username}',
         '-e', f'CYPRESS_PASSWORD={password}',
-        'cypress/included:3.4.0',
+        'cypress/included:12.5.1',
     ]
 
 

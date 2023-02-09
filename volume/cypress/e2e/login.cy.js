@@ -1,5 +1,5 @@
 // USERNAME, PASSWORD, and URL can be set in the OS environment as
-// CYPRESS_USERNAME, CYPRESS_PASSWORD, and URL
+// CYPRESS_USERNAME, CYPRESS_PASSWORD, and CYPRESS_URL
 
 describe('Log in to production servers', () => {
   const server = Cypress.env('URL')
