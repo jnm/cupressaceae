@@ -6,7 +6,7 @@ describe('Log in to production servers', () => {
   it('Logs into ' + server, () => {
     cy.visit(server)
 
-    cy.get('#id_username').type(Cypress.env('USERNAME'))
+    cy.get('#id_login').type(Cypress.env('USERNAME'))
     cy.get('#id_password').type(Cypress.env('PASSWORD'))
     cy.get('button[type=submit]').click()
 
