@@ -10,6 +10,7 @@ from ansi2html import Ansi2HTMLConverter
 PORT = 8013
 
 ansi_to_html = Ansi2HTMLConverter().convert
+cypress_env = os.environ.copy()
 
 
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -28,11 +29,13 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         else:
             self.send_error(HTTPStatus.NOT_FOUND)
             return
+        cypress_env['CYPRESS_URL'] = url
         try:
             print('Starting Cypress…', flush=True)
             output = subprocess.check_output(
                 ['cypress', 'run'],
                 stderr=subprocess.STDOUT,
+                env=cypress_env,
             )
         except subprocess.CalledProcessError as e:
             output = e.output
