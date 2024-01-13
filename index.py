@@ -8,22 +8,8 @@ from http import HTTPStatus
 from ansi2html import Ansi2HTMLConverter
 
 PORT = 8013
-CYPRESS_VOLUME = os.getcwd() + '/volume'
 
 ansi_to_html = Ansi2HTMLConverter().convert
-
-def docker_command(url, username, password):
-    return [
-        'docker', 'run',
-        # '-it',
-        '--rm',
-        '-v', f'{CYPRESS_VOLUME}:/yay',
-        '-w', '/yay',
-        '-e', f'CYPRESS_URL={url}',
-        '-e', f'CYPRESS_USERNAME={username}',
-        '-e', f'CYPRESS_PASSWORD={password}',
-        'cypress/included:12.5.1',
-    ]
 
 
 class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
@@ -45,11 +31,7 @@ class MyHTTPRequestHandler(http.server.BaseHTTPRequestHandler):
         try:
             print('Starting Cypress…', flush=True)
             output = subprocess.check_output(
-                docker_command(
-                    url,
-                    os.environ['CYPRESS_USERNAME'],
-                    os.environ['CYPRESS_PASSWORD'],
-                ),
+                ['cypress', 'run'],
                 stderr=subprocess.STDOUT,
             )
         except subprocess.CalledProcessError as e:

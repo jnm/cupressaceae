@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  cypress-login-test:
+    build: .
+    ports:
+      - 8013:8013
+    restart: unless-stopped
+    env_file:
+      # MUST contain both CYPRESS_USERNAME and CYPRESS_PASSWORD
+      - envfile
